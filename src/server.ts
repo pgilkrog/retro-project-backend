@@ -13,7 +13,7 @@ const router = express()
 router.use(express.json({ limit: '10mb'}))
 
 const corsOptions = {
-    origin: 'http://pawgilkrog.dk',
+    origin: 'https://pawgilkrog.dk',
     credentials: true
 }
 router.use(cors(corsOptions))
