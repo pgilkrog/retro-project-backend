@@ -33,9 +33,4 @@ router.use('/api/paint', require('./routes/paintRoute'))
 // Folder for uploads
 router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 
-// Create the server
-const server = http.createServer(router)
-
-setupSocketIO(server, router)
-
 http.createServer(router).listen(config.server.port, () => console.log(`Server started on port ${config.server.port}`))
