@@ -23,7 +23,7 @@ export function setupSocketIO(httpServer: http.Server, app: express.Application)
       },
     })
 
-    io.on('connection', async (socket) => {
+    io.on('connection', async (socket: Socket) => {
       socket.on('authendicate', handleAuthendication(socket))
       socket.on('joinRoom', handleJoinRoom(socket, io))
       socket.on('chatMessage', handleChatMessage(socket, io))
