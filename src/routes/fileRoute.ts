@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import auth from '../middleware/auth'
-import multer from 'multer'
+const multer = require('multer')
 
 import { File } from '../models/index'
 
@@ -10,10 +10,10 @@ const jsonParser = bodyParser.json()
 // const upload = multer({ dest: 'uploads'})
 
 const storage = multer.diskStorage({
-  destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+  destination: function (req: Request, file: any, cb: (error: Error | null, destination: string) => void) {
     cb(null, 'uploads/');
   },
-  filename: function(req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
+  filename: function(req: Request, file: any, cb: (error: Error | null, filename: string) => void) {
     const originalname = Date.now() + '-' + file.originalname;
     const filename = originalname.trim().replace(/\s+/g, "-");
     cb(null, filename);
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter function to only allow images and PDFs
-const fileFilter = function (req: Request, file: Express.Multer.File, cb: any) { // Using FileFilterCallback from multer
+const fileFilter = function (req: Request, file: any, cb: any) { // Using FileFilterCallback from multer
   if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {
@@ -46,8 +46,8 @@ router.get('/', auth, jsonParser, async (req: Request, res: Response) => {
 
 // @route       POST api/files/upload
 // @desc        Uploads a file
-router.post('/upload', auth, upload.single('image'), jsonParser, async (req: Request, res: Response) => {
-  if (req.file == undefined) return
+router.post('/upload', auth, upload.single('image'), jsonParser, async (req: any, res: Response) => {
+
   res.send({ file: req.file })
 })
 
