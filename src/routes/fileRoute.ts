@@ -10,15 +10,15 @@ const jsonParser = bodyParser.json()
 // const upload = multer({ dest: 'uploads'})
 
 const storage = multer.diskStorage({
-  destination: function (req: Request, file: Express.Multer.File, cb) {
-    cb(null, 'uploads/')
+  destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+    cb(null, 'uploads/');
   },
-  filename: function(req: Request, file: Express.Multer.File, cb) {
-    const originalname = Date.now() + '-' + file.originalname
-    const filename = originalname.trim().replace(/\s+/g, "-")
-    cb(null, filename)
+  filename: function(req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
+    const originalname = Date.now() + '-' + file.originalname;
+    const filename = originalname.trim().replace(/\s+/g, "-");
+    cb(null, filename);
   }
-})
+});
 
 // File filter function to only allow images and PDFs
 const fileFilter = function (req: Request, file: Express.Multer.File, cb: any) {
