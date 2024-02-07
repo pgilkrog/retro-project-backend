@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import * as config from '../config/default.json';
+import { Request, Response, NextFunction } from 'express'
+import * as config from '../config/default.json'
+
+const jwt = require('jsonwebtoken')
 
 export = (req: Request, res: Response, next: NextFunction) => {
     // Get token from the header

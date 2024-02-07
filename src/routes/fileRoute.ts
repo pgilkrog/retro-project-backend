@@ -10,10 +10,10 @@ const jsonParser = bodyParser.json()
 // const upload = multer({ dest: 'uploads'})
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req: Request, file: Express.Multer.File, cb) {
     cb(null, 'uploads/')
   },
-  filename: function(req, file, cb) {
+  filename: function(req: Request, file: Express.Multer.File, cb) {
     const originalname = Date.now() + '-' + file.originalname
     const filename = originalname.trim().replace(/\s+/g, "-")
     cb(null, filename)

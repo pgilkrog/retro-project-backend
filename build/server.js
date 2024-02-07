@@ -30,13 +30,26 @@ const http = __importStar(require("http"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = require("./config/config");
+const db_1 = require("./config/db");
+const path_1 = __importDefault(require("path"));
+const connection = new db_1.ConnectionDatabase;
+connection.connectDB();
 const router = (0, express_1.default)();
 router.use(express_1.default.json({ limit: '10mb' }));
 const corsOptions = {
-    origin: process.env.APP_URL,
+    origin: 'http://127.0.0.1:5173',
     credentials: true
 };
 router.use((0, cors_1.default)(corsOptions));
 router.options('*', (0, cors_1.default)(corsOptions));
 router.get('/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
+// set up routes
+router.use('/api/program', require('./routes/programRoute'));
+router.use('/api/auth', require('./routes/authRoute'));
+router.use('/api/user', require('./routes/userRoute'));
+router.use('/api/error', require('./routes/errorRoute'));
+router.use('/api/files', require('./routes/fileRoute'));
+router.use('/api/paint', require('./routes/paintRoute'));
+// Folder for uploads
+router.use('/api/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
 http.createServer(router).listen(config_1.config.server.port, () => console.log(`Server started on port ${config_1.config.server.port}`));

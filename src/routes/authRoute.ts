@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import bcrypt from 'bcryptjs'
 import { body, validationResult } from 'express-validator'
-import jwt from 'jsonwebtoken'
+const jwt = require('jsonwebtoken')
 import { User, UserSettings }  from '../models/index'
 import auth from '../middleware/auth'
 import * as config from "../config/default.json"
@@ -33,7 +33,7 @@ router.post('/refreshToken/', jsonParser, async (req: Request, res: Response) =>
     // Make a json web token
     jwt.sign(payload, config.jwtSecret, {
       expiresIn: TOKEN_EXPIRES
-    }, (err, token) => {
+    }, (err: Error | null, token: string) => {
       if (err) {
         return res.status(500).send(err.message)
       }
@@ -82,7 +82,7 @@ router.post('/login/', jsonParser, [
     // Make a json web token
     jwt.sign(payload, config.jwtSecret, {
       expiresIn: TOKEN_EXPIRES
-    }, (err, token) => {
+    }, (err: Error | null, token: string) => {
       if (err) {
         return res.status(500).send(err.message)
       }
@@ -151,7 +151,7 @@ router.post('/', jsonParser, [
 
     jwt.sign(payload, config.jwtSecret, {
       expiresIn: TOKEN_EXPIRES
-    }, (err, token) => {
+    }, (err: Error | null, token: string) => {
       if (err) {
         return res.status(500).send(err.message)
       }
