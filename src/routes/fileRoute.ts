@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import auth from '../middleware/auth'
-const multer = require('multer')
+import multer from 'multer'
 
 import { File } from '../models/index'
 
@@ -47,6 +47,7 @@ router.get('/', auth, jsonParser, async (req: Request, res: Response) => {
 // @route       POST api/files/upload
 // @desc        Uploads a file
 router.post('/upload', auth, upload.single('image'), jsonParser, async (req: Request, res: Response) => {
+  if (req.file == undefined) return
   res.send({ file: req.file })
 })
 

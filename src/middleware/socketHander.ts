@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io'
+const { Server, Socket } = require('socket.io')
 import express from 'express'
 import http from 'http'
 
@@ -23,7 +23,7 @@ export function setupSocketIO(httpServer: http.Server, app: express.Application)
       },
     })
 
-    io.on('connection', async (socket: Socket) => {
+    io.on('connection', async (socket: typeof Socket) => {
       socket.on('authendicate', handleAuthendication(socket))
       socket.on('joinRoom', handleJoinRoom(socket, io))
       socket.on('chatMessage', handleChatMessage(socket, io))
@@ -37,7 +37,7 @@ export function setupSocketIO(httpServer: http.Server, app: express.Application)
   })
 }
 
-const handleAuthendication = (socket: Socket) => (email: string) => {
+const handleAuthendication = (socket: typeof Socket) => (email: string) => {
   // Create a user object with socketid and email
   const userInfo: UserInfo = {
     email: email,
@@ -54,7 +54,7 @@ const handleAuthendication = (socket: Socket) => (email: string) => {
   }
 }
 
-const handleJoinRoom = (socket: Socket, io: Server) => (roomUsers: string[]) => {
+const handleJoinRoom = (socket: typeof Socket, io: typeof Server) => (roomUsers: string[]) => {
   // check the array of users online from roomUsers
   const usersOnline = roomUsers.every((user) => onlineUsers.some((onlineUser) => onlineUser.email === user))
 
@@ -70,7 +70,7 @@ const handleJoinRoom = (socket: Socket, io: Server) => (roomUsers: string[]) => 
   }
 }
 
-const handleChatMessage = (socket: Socket, io: Server) => (data: ChatMessage) => {
+const handleChatMessage = (socket: typeof Socket, io: typeof Server) => (data: ChatMessage) => {
   // Get the roomName from the data
   const { roomName } = data
   if (data !== undefined)
@@ -78,7 +78,7 @@ const handleChatMessage = (socket: Socket, io: Server) => (data: ChatMessage) =>
     io.to(roomName.join('-')).emit('chatMessage', data)
 }
 
-const handleDisconnect = (socket: Socket) => (email: string) => {
+const handleDisconnect = (socket: typeof Socket) => (email: string) => {
   // Get the index of 
   console.log("DISCONNECT HIT")
   const userIndex = onlineUsers.findIndex((user) => user.email === email)
