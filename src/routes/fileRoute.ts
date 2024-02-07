@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import auth from '../middleware/auth'
-import multer, { FileFilterCallback } from 'multer'; 
+const multer = require('multer')
 
 import { File } from '../models/index'
 
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter function to only allow images and PDFs
-const fileFilter = function (req: Request, file: Express.Multer.File, cb: FileFilterCallback) { // Using FileFilterCallback from multer
+const fileFilter = function (req: Request, file: Express.Multer.File, cb: any) { // Using FileFilterCallback from multer
   if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {

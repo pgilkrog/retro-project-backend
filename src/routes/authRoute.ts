@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import bcrypt from 'bcryptjs'
-import { body, validationResult } from 'express-validator'
+const bcrypt = require('bcryptjs')
+const { body, validationResult }  = require('express-validator')
 const jwt = require('jsonwebtoken')
 import { User, UserSettings }  from '../models/index'
 import auth from '../middleware/auth'
