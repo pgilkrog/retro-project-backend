@@ -1,6 +1,7 @@
 const { Server, Socket } = require('socket.io')
 import express from 'express'
 import http from 'http'
+import defaults  from '../config/default.json'
 
 interface ChatMessage {
     roomName: string[]
@@ -18,7 +19,7 @@ const onlineUsers: UserInfo[] = []
 export function setupSocketIO(httpServer: http.Server, app: express.Application) {
     const io = new Server(httpServer, {
       cors: {
-        origin: 'https://pawgilkrog.dk',
+        origin: defaults.frontendUrl,
         methods: ['GET', 'POST', 'PUT'],
       },
     })

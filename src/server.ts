@@ -5,6 +5,7 @@ import {config} from './config/config'
 import { setupSocketIO } from './middleware/socketHander'
 import { ConnectionDatabase } from './config/db'
 import path from 'path'
+import defaults  from './config/default.json'
 
 const connection = new ConnectionDatabase
 connection.connectDB()
@@ -13,7 +14,7 @@ const router = express()
 router.use(express.json({ limit: '10mb'}))
 
 const corsOptions = {
-    origin: 'https://pawgilkrog.dk',
+    origin: defaults.frontendUrl,
     credentials: true
 }
 router.use(cors(corsOptions))
@@ -33,4 +34,9 @@ router.use('/api/paint', require('./routes/paintRoute'))
 // Folder for uploads
 router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 
-http.createServer(router).listen(config.server.port, () => console.log(`Server started on port ${config.server.port}`))
+// Create the server
+const server = http.createServer(router)
+
+setupSocketIO(server, router)
+
+server.listen(config.server.port, () => console.log(`Server started on port ${config.server.port}`))
