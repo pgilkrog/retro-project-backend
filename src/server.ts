@@ -37,6 +37,6 @@ router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 // Create the server
 const server = http.createServer(router)
 
-setupSocketIO(server, router)
+// setupSocketIO(server, router)
 
 server.listen(config.server.port, () => console.log(`Server started on port ${config.server.port}`))
