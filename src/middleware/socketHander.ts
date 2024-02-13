@@ -19,7 +19,7 @@ const onlineUsers: UserInfo[] = []
 export function setupSocketIO(httpServer: http.Server, app: express.Application) {
     const io = new Server(httpServer, {
       cors: {
-        origin: defaults.frontendUrl,
+        origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
         methods: ['GET', 'POST', 'PUT'],
       },
     })
@@ -29,6 +29,9 @@ export function setupSocketIO(httpServer: http.Server, app: express.Application)
       socket.on('joinRoom', handleJoinRoom(socket, io))
       socket.on('chatMessage', handleChatMessage(socket, io))
       socket.on('chatDisconnect', handleDisconnect(socket))
+      socket.on("error", function(err: any) {
+        console.log("ERror happened", err)
+      })
     })
 
   // API endpoint to get the list of online users

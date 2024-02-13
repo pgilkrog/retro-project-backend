@@ -5,7 +5,6 @@ import {config} from './config/config'
 import { setupSocketIO } from './middleware/socketHander'
 import { ConnectionDatabase } from './config/db'
 import path from 'path'
-import defaults  from './config/default.json'
 
 const connection = new ConnectionDatabase
 connection.connectDB()
@@ -14,7 +13,7 @@ const router = express()
 router.use(express.json({ limit: '10mb'}))
 
 const corsOptions = {
-    origin: defaults.frontendUrl,
+    origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
     credentials: true
 }
 router.use(cors(corsOptions))
@@ -37,6 +36,6 @@ router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 // Create the server
 const server = http.createServer(router)
 
-// setupSocketIO(server, router)
+setupSocketIO(server, router)
 
 server.listen(config.server.port, () => console.log(`Server started on port ${config.server.port}`))
