@@ -22,11 +22,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config = __importStar(require("../config/default.json"));
+const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     // Get token from the header
     const token = req.header('Authorization');
@@ -36,7 +33,7 @@ module.exports = (req, res, next) => {
     }
     try {
         // Verify the token
-        const decoded = jsonwebtoken_1.default.verify(token, config.jwtSecret);
+        const decoded = jwt.verify(token, config.jwtSecret);
         // Get the user
         req.body = decoded;
         next();

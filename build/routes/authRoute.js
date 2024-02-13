@@ -36,9 +36,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const express_validator_1 = require("express-validator");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const bcrypt = require('bcryptjs');
+const { body, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 const index_1 = require("../models/index");
 const config = __importStar(require("../config/default.json"));
 const router = express_1.default.Router();
@@ -60,7 +60,7 @@ router.post('/refreshToken/', jsonParser, (req, res) => __awaiter(void 0, void 0
             }
         };
         // Make a json web token
-        jsonwebtoken_1.default.sign(payload, config.jwtSecret, {
+        jwt.sign(payload, config.jwtSecret, {
             expiresIn: TOKEN_EXPIRES
         }, (err, token) => {
             if (err) {
@@ -76,10 +76,10 @@ router.post('/refreshToken/', jsonParser, (req, res) => __awaiter(void 0, void 0
 // @route       GET api/auth
 // @desc        Log user in
 router.post('/login/', jsonParser, [
-    (0, express_validator_1.body)('email', 'Please include a valid email').isEmail(),
-    (0, express_validator_1.body)('password', 'Password is required').exists()
+    body('email', 'Please include a valid email').isEmail(),
+    body('password', 'Password is required').exists()
 ], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, express_validator_1.validationResult)(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -91,7 +91,7 @@ router.post('/login/', jsonParser, [
             return res.status(400).json({ msg: 'Invalid Email!' });
         }
         // Check if passwords match eachother
-        const isMatch = yield bcryptjs_1.default.compare(password, user.password);
+        const isMatch = yield bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Password!' });
         }
@@ -101,7 +101,7 @@ router.post('/login/', jsonParser, [
             }
         };
         // Make a json web token
-        jsonwebtoken_1.default.sign(payload, config.jwtSecret, {
+        jwt.sign(payload, config.jwtSecret, {
             expiresIn: TOKEN_EXPIRES
         }, (err, token) => {
             if (err) {
@@ -117,10 +117,10 @@ router.post('/login/', jsonParser, [
 // @route       GET api/auth
 // @desc        Regiser user
 router.post('/', jsonParser, [
-    (0, express_validator_1.body)('email').isEmail(),
-    (0, express_validator_1.body)('password').isLength({ min: 6 })
+    body('email').isEmail(),
+    body('password').isLength({ min: 6 })
 ], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, express_validator_1.validationResult)(req.body);
+    const errors = validationResult(req.body);
     if (!errors.isEmpty())
         return res.status(400).json({ erros: errors.array() });
     const { firstName, lastName, email, password } = req.body;
@@ -130,7 +130,7 @@ router.post('/', jsonParser, [
             return res.status(400).json({ msg: 'Email already exists' });
         }
         // Generate a hashed password
-        const salt = yield bcryptjs_1.default.genSalt(10);
+        const salt = yield bcrypt.genSalt(10);
         let userSettings = new index_1.UserSettings({
             backgroundColour: '#435452',
             backgroundImage: '',
@@ -141,7 +141,7 @@ router.post('/', jsonParser, [
             firstName,
             lastName,
             email,
-            password: yield bcryptjs_1.default.hash(password, salt),
+            password: yield bcrypt.hash(password, salt),
             installedPrograms: ['645be25c282005257c879cbc'],
             settings: userSettings._id
         });
@@ -156,7 +156,7 @@ router.post('/', jsonParser, [
         };
         const id = user._id;
         const role = user.type;
-        jsonwebtoken_1.default.sign(payload, config.jwtSecret, {
+        jwt.sign(payload, config.jwtSecret, {
             expiresIn: TOKEN_EXPIRES
         }, (err, token) => {
             if (err) {

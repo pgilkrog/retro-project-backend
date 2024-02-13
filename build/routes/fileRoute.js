@@ -14,12 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const auth_1 = __importDefault(require("../middleware/auth"));
-const multer_1 = __importDefault(require("multer"));
+const multer = require('multer');
 const index_1 = require("../models/index");
 const router = express_1.default.Router();
 const jsonParser = body_parser_1.default.json();
 // const upload = multer({ dest: 'uploads'})
-const storage = multer_1.default.diskStorage({
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
     },
@@ -39,7 +39,7 @@ const fileFilter = function (req, file, cb) {
     }
 };
 // Set up Multer middleware
-const upload = (0, multer_1.default)({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 // @route       GET files
 // @desc        Get all files
 router.get('/', auth_1.default, jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -10,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupSocketIO = void 0;
-const socket_io_1 = require("socket.io");
+const { Server, Socket } = require('socket.io');
 const onlineUsers = [];
 function setupSocketIO(httpServer, app) {
-    const io = new socket_io_1.Server(httpServer, {
+    const io = new Server(httpServer, {
         cors: {
-            origin: 'http://127.0.0.1:5173',
+            origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
             methods: ['GET', 'POST', 'PUT'],
         },
     });
@@ -24,6 +24,9 @@ function setupSocketIO(httpServer, app) {
         socket.on('joinRoom', handleJoinRoom(socket, io));
         socket.on('chatMessage', handleChatMessage(socket, io));
         socket.on('chatDisconnect', handleDisconnect(socket));
+        socket.on("error", function (err) {
+            console.log("ERror happened", err);
+        });
     }));
     // API endpoint to get the list of online users
     app.get('/api/online-users', (req, res) => {

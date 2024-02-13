@@ -30,6 +30,7 @@ const http = __importStar(require("http"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = require("./config/config");
+const socketHander_1 = require("./middleware/socketHander");
 const db_1 = require("./config/db");
 const path_1 = __importDefault(require("path"));
 const connection = new db_1.ConnectionDatabase;
@@ -37,7 +38,7 @@ connection.connectDB();
 const router = (0, express_1.default)();
 router.use(express_1.default.json({ limit: '10mb' }));
 const corsOptions = {
-    origin: 'http://127.0.0.1:5173',
+    origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
     credentials: true
 };
 router.use((0, cors_1.default)(corsOptions));
@@ -52,4 +53,7 @@ router.use('/api/files', require('./routes/fileRoute'));
 router.use('/api/paint', require('./routes/paintRoute'));
 // Folder for uploads
 router.use('/api/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
-http.createServer(router).listen(config_1.config.server.port, () => console.log(`Server started on port ${config_1.config.server.port}`));
+// Create the server
+const server = http.createServer(router);
+(0, socketHander_1.setupSocketIO)(server, router);
+server.listen(config_1.config.server.port, () => console.log(`Server started on port ${config_1.config.server.port}`));
