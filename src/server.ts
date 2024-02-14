@@ -33,6 +33,9 @@ router.use('/api/paint', require('./routes/paintRoute'))
 // Folder for uploads
 router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 
+router.use('/api/assets/pingpong', express.static(path.join(__dirname, './assets/pingpong')))
+router.use('/api/assets/flappydisk', express.static(path.join(__dirname, './assets/flappydisk')))
+
 // Create the server
 const server = http.createServer(router)
 
