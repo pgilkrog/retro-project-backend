@@ -20,7 +20,7 @@ router.use(cors(corsOptions))
 
 router.options('*', cors(corsOptions))
 
-router.get('/ping', (req, res, next) => res.status(200).json({ hello: 'world' }))
+router.get('/ping', (req, res, next) => res.status(200).json({ message: 'its alive' }))
 
 // set up routes
 router.use('/api/program', require('./routes/programRoute'))
@@ -33,8 +33,8 @@ router.use('/api/paint', require('./routes/paintRoute'))
 // Folder for uploads
 router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 
-router.use('/api/assets/pingpong', express.static(path.join(__dirname, './assets/pingpong')))
-router.use('/api/assets/flappydisk', express.static(path.join(__dirname, './assets/flappydisk')))
+router.use('/api/assets/pingpong', express.static(path.join(__dirname, '../src/assets/pingpong')))
+router.use('/api/assets/flappydisk', express.static(path.join(__dirname, '../src/assets/flappydisk')))
 
 // Create the server
 const server = http.createServer(router)
