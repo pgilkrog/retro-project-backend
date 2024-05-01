@@ -33,6 +33,7 @@ router.use('/api/paint', require('./routes/paintRoute'))
 // Folder for uploads
 router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 
+// Files for reading files from backend to the frontend
 router.use('/api/assets/pingpong', express.static(path.join(__dirname, '../src/assets/pingpong')))
 router.use('/api/assets/flappydisk', express.static(path.join(__dirname, '../src/assets/flappydisk')))
 router.use('/api/assets/teststuff', express.static(path.join(__dirname, '../src/assets/teststuff')))

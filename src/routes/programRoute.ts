@@ -12,7 +12,7 @@ const jsonParser = bodyParser.json()
 router.get('/', auth, async (req: Request, res: Response) => {
   try {
     const fetchedItems = await Program.find()
-    res.json({ programs: fetchedItems })
+    res.json(fetchedItems)
   } catch (error: any) {
     console.log(error.message)
     res.status(500).send('server error')
@@ -34,8 +34,9 @@ router.delete('/:id', auth, async (req: Request, res: Response) => {
 // @route       POST api/program
 // @desc        Create a program
 router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
-  const { name, image, color, displayName, sortOrder, type } = req.query
+  const {name, image, color, displayName, sortOrder, type} = req.query
 
+  console.log(name, image, color, displayName, sortOrder, type)
   try {
     const newProgram = new Program({
       name,
@@ -56,11 +57,10 @@ router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
 
 // @route       PUT api/program/:id
 // @desc        Update program by id
-router.put('/:id', auth, async (req: Request, res: Response) => {
-  console.log("UPDATE USER")
+router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
+  console.log("UPDATE Program")
   const id = req.params.id
   const programToUpdate = req.query
-  console.log("body", programToUpdate)
   try {
     const updateProgram = await Program.findByIdAndUpdate(id, programToUpdate, { new: true})
 

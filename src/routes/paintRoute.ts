@@ -9,7 +9,7 @@ const jsonParser = bodyParser.json()
 router.get('/', jsonParser, async (req: Request, res: Response) => {
   try {
     const fetchedPaintings = await Painting.find()
-    res.json({ paintings: fetchedPaintings})
+    res.json(fetchedPaintings)
   } catch (error) {
     console.log(error)
     res.status(500).send('error gettings all paintings')
@@ -20,7 +20,7 @@ router.get('/:id', auth, async (req: Request, res: Response) => {
   console.log(req.params)
   try {
     const fetchedPaintings = await Painting.find({ uId: req.params.id }).exec()
-    res.json({ paintings: fetchedPaintings })
+    res.json(fetchedPaintings)
   } catch (error) {
     console.log(error)
     res.status(500).send('error getting paintings with userId')
