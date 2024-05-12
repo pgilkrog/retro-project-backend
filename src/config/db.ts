@@ -1,5 +1,5 @@
-import mongoose, { ConnectOptions } from 'mongoose';
-import * as config from './default.json';
+import mongoose, { ConnectOptions } from 'mongoose'
+import * as config from './default.json'
 
 export class ConnectionDatabase {
     connectDB = async () => {
@@ -7,12 +7,12 @@ export class ConnectionDatabase {
             await mongoose.connect(config.mongoURI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            } as ConnectOptions);
+            } as ConnectOptions)
         
-            console.log('MongooseDB connected');
+            console.log('MongooseDB connected')
         } catch (err: any) {
-            console.error(err.message);
-            process.exit(1);
+            console.error(err.message)
+            process.exit(1)
         } 
     }
 }

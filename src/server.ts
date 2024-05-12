@@ -13,7 +13,7 @@ const router = express()
 router.use(express.json({ limit: '10mb'}))
 
 const corsOptions = {
-    origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
+    origin: ["http://localhost:5173", "https://pawgilkrog.dk", "http://127.0.0.1:5173"],
     credentials: true
 }
 router.use(cors(corsOptions))

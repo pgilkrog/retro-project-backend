@@ -58,9 +58,11 @@ router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
 // @route       PUT api/program/:id
 // @desc        Update program by id
 router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
-  console.log("UPDATE Program")
+  const {name, image, color, displayName, sortOrder, type} = req.query
   const id = req.params.id
   const programToUpdate = req.query
+  console.log("UPDATE Program", name, image, color, displayName, sortOrder, type)
+  console.log("UPDATE Program", programToUpdate)
   try {
     const updateProgram = await Program.findByIdAndUpdate(id, programToUpdate, { new: true})
 
