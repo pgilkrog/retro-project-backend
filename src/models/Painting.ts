@@ -12,6 +12,14 @@ const PaintingSchema = new mongoose.Schema({
   uId: {
     type: String, 
     required: true
+  },
+  width: {
+    type: Number,
+    required: true
+  },
+  height: {
+    type: Number, 
+    required: true
   }
 })
 

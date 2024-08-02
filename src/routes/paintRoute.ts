@@ -29,11 +29,13 @@ router.get('/:id', auth, async (req: Request, res: Response) => {
 
 router.post('/', jsonParser, async (req: Request, res: Response) => {
   try {
-    const { name, canvas, uId } = req.body
+    const { name, canvas, uId, height, width } = req.body
     const newPainting = new Painting({
       name,
       canvas,
       uId,
+      height,
+      width
     });
     await newPainting.save()
     res.json(newPainting)
