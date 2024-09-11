@@ -37,6 +37,7 @@ router.use('/api/uploads', express.static(path.join(__dirname, '../uploads')))
 router.use('/api/assets/pingpong', express.static(path.join(__dirname, '../src/assets/pingpong')))
 router.use('/api/assets/flappydisk', express.static(path.join(__dirname, '../src/assets/flappydisk')))
 router.use('/api/assets/teststuff', express.static(path.join(__dirname, '../src/assets/teststuff')))
+router.use('/api/assets/spaceshooter', express.static(path.join(__dirname, '../src/assets/spaceshooter')))
 
 // Create the server
 const server = http.createServer(router)
