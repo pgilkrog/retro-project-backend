@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import { Error } from '../models/index'
+import { Error } from '../models'
 
 const router = express.Router()
 const jsonParser = bodyParser.json()
@@ -25,11 +25,11 @@ router.post('/', jsonParser, async (req: Request, res: Response) => {
     const newError = new Error({
       text,
       date,
-      userId
+      userId,
     })
     await newError.save()
     res.json(newError)
-  } catch(error: any) {
+  } catch (error: any) {
     console.log(error)
     res.status(500).send('server error')
   }

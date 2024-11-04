@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const index_1 = require("../models/index");
+const models_1 = require("../models");
 const router = express_1.default.Router();
 const jsonParser = body_parser_1.default.json();
 // @route      GET
 // @desc       Get all erros
 router.get('/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const fetchedErros = yield index_1.Error.find();
+        const fetchedErros = yield models_1.Error.find();
         res.json({ errors: fetchedErros });
     }
     catch (error) {
@@ -32,10 +32,10 @@ router.get('/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, func
 router.post('/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { text, date, userId } = req.query;
     try {
-        const newError = new index_1.Error({
+        const newError = new models_1.Error({
             text,
             date,
-            userId
+            userId,
         });
         yield newError.save();
         res.json(newError);

@@ -17,6 +17,14 @@ const PaintingSchema = new mongoose_1.default.Schema({
     uId: {
         type: String,
         required: true
+    },
+    width: {
+        type: Number,
+        required: true
+    },
+    height: {
+        type: Number,
+        required: true
     }
 });
 const Painting = mongoose_1.default.model('Painting', PaintingSchema);

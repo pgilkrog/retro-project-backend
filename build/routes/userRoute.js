@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const index_1 = require("../models/index");
+const models_1 = require("../models");
 const auth_1 = __importDefault(require("../middleware/auth"));
 const router = express_1.default.Router();
 const jsonParser = body_parser_1.default.json();
@@ -22,7 +22,7 @@ const jsonParser = body_parser_1.default.json();
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const userFound = yield index_1.User.findById({ _id: id }).populate('settings');
+        const userFound = yield models_1.User.findById({ _id: id }).populate('settings');
         res.send({ user: userFound });
     }
     catch (error) {
@@ -36,7 +36,9 @@ router.put('/:id', auth_1.default, jsonParser, (req, res) => __awaiter(void 0, v
     const id = req.params.id;
     const userUpdate = req.query;
     try {
-        const updatedUser = yield index_1.User.findByIdAndUpdate(id, userUpdate, { new: true }).populate('settings');
+        const updatedUser = yield models_1.User.findByIdAndUpdate(id, userUpdate, {
+            new: true,
+        }).populate('settings');
         if (!updatedUser)
             return res.status(404).send({ error: 'User not found' });
         res.send(updatedUser);
@@ -51,9 +53,9 @@ router.put('/:id', auth_1.default, jsonParser, (req, res) => __awaiter(void 0, v
 router.put('/settings/:id', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const userSettingsUpdate = req.query;
-    console.log("UPDATE USERSETTINGS", id, userSettingsUpdate);
+    console.log('UPDATE USERSETTINGS', id, userSettingsUpdate);
     try {
-        const updateUserSetting = yield index_1.UserSettings.findByIdAndUpdate(id, userSettingsUpdate, { new: true });
+        const updateUserSetting = yield models_1.UserSettings.findByIdAndUpdate(id, userSettingsUpdate, { new: true });
         if (!updateUserSetting)
             return res.status(404).send({ error: 'Program not found' });
         res.send(updateUserSetting);
@@ -67,7 +69,7 @@ router.put('/settings/:id', auth_1.default, (req, res) => __awaiter(void 0, void
 // @desc        Get all programs
 router.get('/', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const fetchedItems = yield index_1.User.find().populate('settings');
+        const fetchedItems = yield models_1.User.find().populate('settings');
         res.json({ users: fetchedItems });
     }
     catch (error) {

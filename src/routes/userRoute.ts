@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import { User, UserSettings }  from '../models/index'
+import { User, UserSettings } from '../models'
 import auth from '../middleware/auth'
 
 const router = express.Router()
@@ -13,9 +13,9 @@ router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
 
     const userFound = await User.findById({ _id: id }).populate('settings')
-    
-    res.send({ user: userFound })    
-  } catch(error: any) {
+
+    res.send({ user: userFound })
+  } catch (error: any) {
     console.log(error.message)
     res.status(500).send('server error')
   }
@@ -28,9 +28,10 @@ router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
   const userUpdate = req.query
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, userUpdate, { new: true}).populate('settings')
-    if (!updatedUser)
-      return res.status(404).send({ error: 'User not found'})
+    const updatedUser = await User.findByIdAndUpdate(id, userUpdate, {
+      new: true,
+    }).populate('settings')
+    if (!updatedUser) return res.status(404).send({ error: 'User not found' })
 
     res.send(updatedUser)
   } catch (error: any) {
@@ -44,12 +45,16 @@ router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
 router.put('/settings/:id', auth, async (req: Request, res: Response) => {
   const id = req.params.id
   const userSettingsUpdate = req.query
-  console.log("UPDATE USERSETTINGS", id, userSettingsUpdate)
+  console.log('UPDATE USERSETTINGS', id, userSettingsUpdate)
   try {
-    const updateUserSetting = await UserSettings.findByIdAndUpdate(id, userSettingsUpdate, { new: true})
+    const updateUserSetting = await UserSettings.findByIdAndUpdate(
+      id,
+      userSettingsUpdate,
+      { new: true }
+    )
 
     if (!updateUserSetting)
-      return res.status(404).send({ error: 'Program not found'})
+      return res.status(404).send({ error: 'Program not found' })
 
     res.send(updateUserSetting)
   } catch (error: any) {

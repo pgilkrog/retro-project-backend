@@ -1,6 +1,8 @@
 export { Program } from './Program'
+export { InstalledProgram } from './InstalledProgram'
 export { User } from './User'
 export { UserSettings } from './UserSettings'
 export { Error } from './Error'
 export { File } from './File'
 export { Painting } from './Painting'
+export { Slide } from './Slide'

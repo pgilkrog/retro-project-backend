@@ -20,7 +20,7 @@ const jsonParser = body_parser_1.default.json();
 router.get('/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const fetchedPaintings = yield models_1.Painting.find();
-        res.json({ paintings: fetchedPaintings });
+        res.json(fetchedPaintings);
     }
     catch (error) {
         console.log(error);
@@ -31,7 +31,7 @@ router.get('/:id', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 
     console.log(req.params);
     try {
         const fetchedPaintings = yield models_1.Painting.find({ uId: req.params.id }).exec();
-        res.json({ paintings: fetchedPaintings });
+        res.json(fetchedPaintings);
     }
     catch (error) {
         console.log(error);
@@ -40,11 +40,13 @@ router.get('/:id', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 
 }));
 router.post('/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, canvas, uId } = req.body;
+        const { name, canvas, uId, height, width } = req.body;
         const newPainting = new models_1.Painting({
             name,
             canvas,
             uId,
+            height,
+            width,
         });
         yield newPainting.save();
         res.json(newPainting);

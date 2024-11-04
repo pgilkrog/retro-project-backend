@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupSocketIO = void 0;
+exports.setupSocketIO = setupSocketIO;
 const { Server, Socket } = require('socket.io');
 const onlineUsers = [];
 function setupSocketIO(httpServer, app) {
     const io = new Server(httpServer, {
         cors: {
-            origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173"],
+            origin: ["https://pawgilkrog.dk", "http://127.0.0.1:5173", "http://localhost:5173"],
             methods: ['GET', 'POST', 'PUT'],
         },
     });
@@ -34,7 +34,6 @@ function setupSocketIO(httpServer, app) {
         res.json(onlineUserEmails);
     });
 }
-exports.setupSocketIO = setupSocketIO;
 const handleAuthendication = (socket) => (email) => {
     // Create a user object with socketid and email
     const userInfo = {

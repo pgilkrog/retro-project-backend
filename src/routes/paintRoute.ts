@@ -35,8 +35,8 @@ router.post('/', jsonParser, async (req: Request, res: Response) => {
       canvas,
       uId,
       height,
-      width
-    });
+      width,
+    })
     await newPainting.save()
     res.json(newPainting)
   } catch (error) {

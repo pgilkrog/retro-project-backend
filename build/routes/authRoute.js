@@ -39,7 +39,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-const index_1 = require("../models/index");
+const models_1 = require("../models");
 const config = __importStar(require("../config/default.json"));
 const router = express_1.default.Router();
 const jsonParser = body_parser_1.default.json();
@@ -50,18 +50,18 @@ const TOKEN_EXPIRES = 3600;
 router.post('/refreshToken/', jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.body;
-        const user = yield index_1.User.findById(id).select('-password');
+        const user = yield models_1.User.findById(id).select('-password');
         if (!user) {
             return res.status(400).json({ msg: 'Invalid credentials!' });
         }
         const payload = {
             user: {
-                _id: user._id
-            }
+                _id: user._id,
+            },
         };
         // Make a json web token
         jwt.sign(payload, config.jwtSecret, {
-            expiresIn: TOKEN_EXPIRES
+            expiresIn: TOKEN_EXPIRES,
         }, (err, token) => {
             if (err) {
                 return res.status(500).send(err.message);
@@ -77,7 +77,7 @@ router.post('/refreshToken/', jsonParser, (req, res) => __awaiter(void 0, void 0
 // @desc        Log user in
 router.post('/login/', jsonParser, [
     body('email', 'Please include a valid email').isEmail(),
-    body('password', 'Password is required').exists()
+    body('password', 'Password is required').exists(),
 ], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -86,7 +86,7 @@ router.post('/login/', jsonParser, [
     const { email, password } = req.body;
     try {
         // Find a user with email
-        const user = yield index_1.User.findOne({ email });
+        const user = (yield models_1.User.findOne({ email }));
         if (!user) {
             return res.status(400).json({ msg: 'Invalid Email!' });
         }
@@ -97,12 +97,12 @@ router.post('/login/', jsonParser, [
         }
         const payload = {
             user: {
-                _id: user._id
-            }
+                _id: user._id,
+            },
         };
         // Make a json web token
         jwt.sign(payload, config.jwtSecret, {
-            expiresIn: TOKEN_EXPIRES
+            expiresIn: TOKEN_EXPIRES,
         }, (err, token) => {
             if (err) {
                 return res.status(500).send(err.message);
@@ -116,48 +116,45 @@ router.post('/login/', jsonParser, [
 }));
 // @route       GET api/auth
 // @desc        Regiser user
-router.post('/', jsonParser, [
-    body('email').isEmail(),
-    body('password').isLength({ min: 6 })
-], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/', jsonParser, [body('email').isEmail(), body('password').isLength({ min: 6 })], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = validationResult(req.body);
     if (!errors.isEmpty())
         return res.status(400).json({ erros: errors.array() });
     const { firstName, lastName, email, password } = req.body;
     try {
-        let fetchedUser = yield index_1.User.findOne({ email });
+        let fetchedUser = yield models_1.User.findOne({ email });
         if (fetchedUser) {
             return res.status(400).json({ msg: 'Email already exists' });
         }
         // Generate a hashed password
         const salt = yield bcrypt.genSalt(10);
-        let userSettings = new index_1.UserSettings({
+        let userSettings = new models_1.UserSettings({
             backgroundColour: '#435452',
             backgroundImage: '',
             useBackground: false,
-            theme: 'standard'
+            theme: 'standard',
         });
-        let user = new index_1.User({
+        let user = new models_1.User({
             firstName,
             lastName,
             email,
             password: yield bcrypt.hash(password, salt),
             installedPrograms: ['645be25c282005257c879cbc'],
-            settings: userSettings._id
+            settings: userSettings._id,
         });
-        console.log("CREATED USERSETTINGS", userSettings);
-        console.log("CREATED USER", user);
+        console.log('CREATED USERSETTINGS', userSettings);
+        console.log('CREATED USER', user);
         yield userSettings.save();
         yield user.save();
         const payload = {
             user: {
-                _id: user._id
-            }
+                _id: user._id,
+            },
         };
         const id = user._id;
         const role = user.type;
         jwt.sign(payload, config.jwtSecret, {
-            expiresIn: TOKEN_EXPIRES
+            expiresIn: TOKEN_EXPIRES,
         }, (err, token) => {
             if (err) {
                 return res.status(500).send(err.message);

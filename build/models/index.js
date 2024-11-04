@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Painting = exports.File = exports.Error = exports.UserSettings = exports.User = exports.Program = void 0;
+exports.Slide = exports.Painting = exports.File = exports.Error = exports.UserSettings = exports.User = exports.InstalledProgram = exports.Program = void 0;
 var Program_1 = require("./Program");
 Object.defineProperty(exports, "Program", { enumerable: true, get: function () { return Program_1.Program; } });
+var InstalledProgram_1 = require("./InstalledProgram");
+Object.defineProperty(exports, "InstalledProgram", { enumerable: true, get: function () { return InstalledProgram_1.InstalledProgram; } });
 var User_1 = require("./User");
 Object.defineProperty(exports, "User", { enumerable: true, get: function () { return User_1.User; } });
 var UserSettings_1 = require("./UserSettings");
@@ -13,3 +15,5 @@ var File_1 = require("./File");
 Object.defineProperty(exports, "File", { enumerable: true, get: function () { return File_1.File; } });
 var Painting_1 = require("./Painting");
 Object.defineProperty(exports, "Painting", { enumerable: true, get: function () { return Painting_1.Painting; } });
+var Slide_1 = require("./Slide");
+Object.defineProperty(exports, "Slide", { enumerable: true, get: function () { return Slide_1.Slide; } });
