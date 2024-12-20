@@ -28,17 +28,16 @@ module.exports = (req, res, next) => {
     // Get token from the header
     const token = req.header('Authorization');
     // Check if no token
-    if (!token) {
+    if (token == undefined) {
         return res.status(401).json({ msg: 'No Token, authorization denied!' });
     }
     try {
-        // Verify the token
         const decoded = jwt.verify(token, config.jwtSecret);
-        // Get the user
-        req.body = decoded;
+        console.log('token is good', decoded);
         next();
     }
-    catch (_a) {
-        res.status(401).json({ msg: 'Token is not valid!' });
+    catch (error) {
+        res.json({ message: 'not authorized' });
+        req.body = {};
     }
 };

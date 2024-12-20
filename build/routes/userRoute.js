@@ -21,60 +21,63 @@ const jsonParser = body_parser_1.default.json();
 // @desc        GET all users
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
+        const { id } = req.params;
         const userFound = yield models_1.User.findById({ _id: id }).populate('settings');
-        res.send({ user: userFound });
+        res.json({ user: userFound, status: true });
     }
     catch (error) {
         console.log(error.message);
-        res.status(500).send('server error');
+        res.status(500).json('server error');
+        res.json({ status: false });
     }
 }));
 // @route       PUT api/user/:id
 // @desc        Update user by id
 router.put('/:id', auth_1.default, jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
+    const { id } = req.params;
     const userUpdate = req.query;
     try {
         const updatedUser = yield models_1.User.findByIdAndUpdate(id, userUpdate, {
             new: true,
         }).populate('settings');
         if (!updatedUser)
-            return res.status(404).send({ error: 'User not found' });
-        res.send(updatedUser);
+            return res.status(404).json({ error: 'User not found' });
+        res.json({ user: updatedUser, status: true });
     }
     catch (error) {
         console.log(error.message);
-        res.status(500).send('server error');
+        res.status(500).json('server error');
+        res.json({ status: false });
     }
 }));
 // @route       PUT api/user/settings/:id
 // @desc        Update userSettings by id
-router.put('/settings/:id', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const userSettingsUpdate = req.query;
-    console.log('UPDATE USERSETTINGS', id, userSettingsUpdate);
+router.put('/settings/:id', auth_1.default, jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const id = req.params.id;
+        const userSettingsUpdate = req.body;
+        console.log('UPDATE USERSETTINGS', id, userSettingsUpdate);
         const updateUserSetting = yield models_1.UserSettings.findByIdAndUpdate(id, userSettingsUpdate, { new: true });
         if (!updateUserSetting)
-            return res.status(404).send({ error: 'Program not found' });
-        res.send(updateUserSetting);
+            return res.status(404).json({ error: 'Program not found' });
+        res.json(updateUserSetting);
     }
     catch (error) {
         console.log(error.message);
-        res.status(500).send('server error');
+        res.status(500).json('server error');
     }
 }));
-// @route       GET api/program
-// @desc        Get all programs
+// @route       GET api/user
+// @desc        Get all users
 router.get('/', auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const fetchedItems = yield models_1.User.find().populate('settings');
-        res.json({ users: fetchedItems });
+        res.json({ users: fetchedItems, status: true });
     }
     catch (error) {
         console.log(error.message);
-        res.status(500).send('server error');
+        res.status(500).json('server error');
+        res.json({ users: [], status: false });
     }
 }));
 module.exports = router;

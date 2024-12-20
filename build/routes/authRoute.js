@@ -63,14 +63,14 @@ router.post('/refreshToken/', jsonParser, (req, res) => __awaiter(void 0, void 0
         jwt.sign(payload, config.jwtSecret, {
             expiresIn: TOKEN_EXPIRES,
         }, (err, token) => {
-            if (err) {
+            if (err != undefined) {
                 return res.status(500).send(err.message);
             }
-            res.json({ token, user });
+            res.json({ token: token, resUser: user });
         });
     }
     catch (err) {
-        res.status(500).send('Server error');
+        res.status(500).json('Server error');
     }
 }));
 // @route       GET api/auth
@@ -80,19 +80,20 @@ router.post('/login/', jsonParser, [
     body('password', 'Password is required').exists(),
 ], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (errors.isEmpty() === false) {
         return res.status(400).json({ errors: errors.array() });
     }
+    console.log(req.body);
     const { email, password } = req.body;
     try {
         // Find a user with email
-        const user = (yield models_1.User.findOne({ email }));
-        if (!user) {
+        const user = yield models_1.User.findOne({ email });
+        if (user == undefined) {
             return res.status(400).json({ msg: 'Invalid Email!' });
         }
         // Check if passwords match eachother
         const isMatch = yield bcrypt.compare(password, user.password);
-        if (!isMatch) {
+        if (isMatch === false) {
             return res.status(400).json({ msg: 'Invalid Password!' });
         }
         const payload = {
@@ -105,9 +106,9 @@ router.post('/login/', jsonParser, [
             expiresIn: TOKEN_EXPIRES,
         }, (err, token) => {
             if (err) {
-                return res.status(500).send(err.message);
+                return res.status(500).json(err.message);
             }
-            res.json({ token, user });
+            res.json({ token: token, resUser: user });
         });
     }
     catch (err) {
