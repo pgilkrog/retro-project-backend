@@ -10,68 +10,76 @@ const jsonParser = bodyParser.json()
 // @desc        GET all users
 router.get('/:id', async (req: Request, res: Response) => {
   try {
-    const id = req.params.id
-
+    const { id } = req.params
     const userFound = await User.findById({ _id: id }).populate('settings')
 
-    res.send({ user: userFound })
+    res.json({ user: userFound, status: true })
   } catch (error: any) {
     console.log(error.message)
-    res.status(500).send('server error')
+    res.status(500).json('server error')
+    res.json({ status: false })
   }
 })
 
 // @route       PUT api/user/:id
 // @desc        Update user by id
 router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
-  const id = req.params.id
+  const { id } = req.params
   const userUpdate = req.query
 
   try {
     const updatedUser = await User.findByIdAndUpdate(id, userUpdate, {
       new: true,
     }).populate('settings')
-    if (!updatedUser) return res.status(404).send({ error: 'User not found' })
+    if (!updatedUser) return res.status(404).json({ error: 'User not found' })
 
-    res.send(updatedUser)
+    res.json({ user: updatedUser, status: true })
   } catch (error: any) {
     console.log(error.message)
-    res.status(500).send('server error')
+    res.status(500).json('server error')
+    res.json({ status: false })
   }
 })
 
 // @route       PUT api/user/settings/:id
 // @desc        Update userSettings by id
-router.put('/settings/:id', auth, async (req: Request, res: Response) => {
-  const id = req.params.id
-  const userSettingsUpdate = req.query
-  console.log('UPDATE USERSETTINGS', id, userSettingsUpdate)
-  try {
-    const updateUserSetting = await UserSettings.findByIdAndUpdate(
-      id,
-      userSettingsUpdate,
-      { new: true }
-    )
+router.put(
+  '/settings/:id',
+  auth,
+  jsonParser,
+  async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id
+      const userSettingsUpdate = req.body
+      console.log('UPDATE USERSETTINGS', id, userSettingsUpdate)
 
-    if (!updateUserSetting)
-      return res.status(404).send({ error: 'Program not found' })
+      const updateUserSetting = await UserSettings.findByIdAndUpdate(
+        id,
+        userSettingsUpdate,
+        { new: true }
+      )
 
-    res.send(updateUserSetting)
-  } catch (error: any) {
-    console.log(error.message)
-    res.status(500).send('server error')
+      if (!updateUserSetting)
+        return res.status(404).json({ error: 'Program not found' })
+
+      res.json(updateUserSetting)
+    } catch (error: any) {
+      console.log(error.message)
+      res.status(500).json('server error')
+    }
   }
-})
+)
 
-// @route       GET api/program
-// @desc        Get all programs
+// @route       GET api/user
+// @desc        Get all users
 router.get('/', auth, async (req: Request, res: Response) => {
   try {
     const fetchedItems = await User.find().populate('settings')
-    res.json({ users: fetchedItems })
+    res.json({ users: fetchedItems, status: true })
   } catch (error: any) {
     console.log(error.message)
-    res.status(500).send('server error')
+    res.status(500).json('server error')
+    res.json({ users: [], status: false })
   }
 })
 

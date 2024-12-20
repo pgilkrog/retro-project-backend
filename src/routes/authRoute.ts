@@ -22,6 +22,7 @@ router.post(
     try {
       const { id } = req.body
       const user = await User.findById(id).select('-password')
+
       if (!user) {
         return res.status(400).json({ msg: 'Invalid credentials!' })
       }
@@ -40,14 +41,15 @@ router.post(
           expiresIn: TOKEN_EXPIRES,
         },
         (err: Error | null, token: string) => {
-          if (err) {
+          if (err != undefined) {
             return res.status(500).send(err.message)
           }
-          res.json({ token, user })
+
+          res.json({ token: token, resUser: user })
         }
       )
     } catch (err) {
-      res.status(500).send('Server error')
+      res.status(500).json('Server error')
     }
   }
 )
@@ -64,24 +66,25 @@ router.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req)
 
-    if (!errors.isEmpty()) {
+    if (errors.isEmpty() === false) {
       return res.status(400).json({ errors: errors.array() })
     }
 
+    console.log(req.body)
     const { email, password } = req.body
 
     try {
       // Find a user with email
-      const user = (await User.findOne({ email })) as any
+      const user = await User.findOne({ email })
 
-      if (!user) {
+      if (user == undefined) {
         return res.status(400).json({ msg: 'Invalid Email!' })
       }
 
       // Check if passwords match eachother
       const isMatch = await bcrypt.compare(password, user.password)
 
-      if (!isMatch) {
+      if (isMatch === false) {
         return res.status(400).json({ msg: 'Invalid Password!' })
       }
 
@@ -100,9 +103,10 @@ router.post(
         },
         (err: Error | null, token: string) => {
           if (err) {
-            return res.status(500).send(err.message)
+            return res.status(500).json(err.message)
           }
-          res.json({ token, user })
+
+          res.json({ token: token, resUser: user })
         }
       )
     } catch (err) {
