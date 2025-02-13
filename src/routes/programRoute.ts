@@ -35,7 +35,7 @@ router.delete('/:id', auth, async (req: Request, res: Response) => {
 // @route       POST api/program
 // @desc        Create a program
 router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
-  const { name, image, color, displayName, sortOrder, type } = req.query
+  const { name, image, color, displayName, sortOrder, type } = req.body
 
   console.log(name, image, color, displayName, sortOrder, type)
   try {
@@ -112,10 +112,8 @@ router.post(
   auth,
   jsonParser,
   async (req: Request, res: Response) => {
-    const { programId, userId, gridPosition } = req.query
-
-    console.log(req.params)
-    console.log(req.query)
+    console.log(req.body)
+    const { programId, userId, gridPosition } = req.body
     try {
       const newInstalledProgram = new InstalledProgram({
         programId,
@@ -158,11 +156,10 @@ router.put(
   auth,
   jsonParser,
   async (req: Request, res: Response) => {
-    // const { gridPosition } = req.query
     const id = req.params.id
-    const programToUpdate = req.query
-    // console.log("UPDATE Program", gridPosition)
-    console.log('UPDATE InstalledProgram', programToUpdate)
+    const programToUpdate = req.body
+
+    console.log(programToUpdate)
     try {
       const updateProgram = await InstalledProgram.findByIdAndUpdate(
         id,
@@ -170,10 +167,11 @@ router.put(
         { new: true }
       )
 
-      if (!updateProgram)
-        return res.status(404).send({ error: 'Program not found' })
+      if (updateProgram == undefined) {
+        return res.status(404).json({ error: 'Program not found' })
+      }
 
-      res.send(updateProgram)
+      res.json(updateProgram)
     } catch (error: any) {
       console.log(error.message)
       res.status(500).send('server error')

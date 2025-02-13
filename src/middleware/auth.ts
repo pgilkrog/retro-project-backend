@@ -14,8 +14,11 @@ export = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret)
-    console.log('token is good', decoded)
-    next()
+    if (decoded) {
+      next()
+    } else {
+      res.json({ message: 'could not decode token' })
+    }
   } catch (error) {
     res.json({ message: 'not authorized' })
     req.body = {}

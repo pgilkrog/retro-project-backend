@@ -19,7 +19,9 @@ router.get('/', jsonParser, async (req: Request, res: Response) => {
 router.get('/:id', auth, async (req: Request, res: Response) => {
   console.log(req.params)
   try {
-    const fetchedPaintings = await Painting.find({ uId: req.params.id }).exec()
+    const fetchedPaintings = await Painting.find({
+      userId: req.params.id,
+    }).exec()
     res.json(fetchedPaintings)
   } catch (error) {
     console.log(error)
@@ -29,14 +31,15 @@ router.get('/:id', auth, async (req: Request, res: Response) => {
 
 router.post('/', jsonParser, async (req: Request, res: Response) => {
   try {
-    const { name, canvas, uId, height, width } = req.body
+    const { name, canvas, userId, height, width } = req.body
     const newPainting = new Painting({
       name,
       canvas,
-      uId,
+      userId,
       height,
       width,
     })
+
     await newPainting.save()
     res.json(newPainting)
   } catch (error) {
