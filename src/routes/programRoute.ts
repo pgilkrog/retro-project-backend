@@ -35,10 +35,9 @@ router.delete('/:id', auth, async (req: Request, res: Response) => {
 // @route       POST api/program
 // @desc        Create a program
 router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
-  const { name, image, color, displayName, sortOrder, type } = req.body
-
-  console.log(name, image, color, displayName, sortOrder, type)
+  // console.log(name, image, color, displayName, sortOrder, type)
   try {
+    const { name, image, color, displayName, sortOrder, type } = req.body
     const newProgram = new Program({
       name,
       displayName,
@@ -47,7 +46,6 @@ router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
       sortOrder,
       type,
     })
-
     await newProgram.save()
     res.json(newProgram)
   } catch (error: any) {
@@ -59,23 +57,17 @@ router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
 // @route       PUT api/program/:id
 // @desc        Update program by id
 router.put('/:id', auth, jsonParser, async (req: Request, res: Response) => {
-  const { name, image, color, displayName, sortOrder, type } = req.query
-  const id = req.params.id
-  const programToUpdate = req.query
-  console.log(
-    'UPDATE Program',
-    name,
-    image,
-    color,
-    displayName,
-    sortOrder,
-    type
-  )
+  const programToUpdate = req.body.params
+
   console.log('UPDATE Program', programToUpdate)
   try {
-    const updateProgram = await Program.findByIdAndUpdate(id, programToUpdate, {
-      new: true,
-    })
+    const updateProgram = await Program.findByIdAndUpdate(
+      programToUpdate._id,
+      programToUpdate,
+      {
+        new: true,
+      }
+    )
 
     if (!updateProgram)
       return res.status(404).send({ error: 'Program not found' })
