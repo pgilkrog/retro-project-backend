@@ -25,3 +25,4 @@ npm run lint
 ### Heroku
 
 git push heroku main
+heroku git:remote -a retro-project-backend
