@@ -45,7 +45,7 @@ router.post(
             return res.status(500).send(err.message)
           }
 
-          res.json({ token: token, user: user })
+          res.json({ token: token, resUser: user })
         }
       )
     } catch (err) {
@@ -106,7 +106,7 @@ router.post(
             return res.status(500).json(err.message)
           }
 
-          res.json({ token: token, user: user })
+          res.json({ token: token, resUser: user })
         }
       )
     } catch (err) {
