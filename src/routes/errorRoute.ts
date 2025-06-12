@@ -9,6 +9,7 @@ const jsonParser = bodyParser.json()
 // @desc       Get all erros
 router.get('/', jsonParser, async (req: Request, res: Response) => {
   try {
+    console.log('Fetching all errors')
     const fetchedErros = await Error.find()
     res.json({ errors: fetchedErros })
   } catch (error: any) {

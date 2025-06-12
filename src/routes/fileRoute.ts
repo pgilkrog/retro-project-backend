@@ -56,6 +56,20 @@ router.get('/', auth, jsonParser, async (req: Request, res: Response) => {
   }
 })
 
+// @route       GET files
+// @desc        Get files by id
+router.get('/:id', auth, jsonParser, async (req: Request, res: Response) => {
+  try {
+    const fetchedItems = await File.find({
+      userId: req.params.id,
+    })
+    res.json({ files: fetchedItems })
+  } catch (error: any) {
+    console.log(error.message)
+    res.status(500).send('server error')
+  }
+})
+
 // @route       POST api/files/upload
 // @desc        Uploads a file
 router.post(
@@ -64,16 +78,20 @@ router.post(
   upload.single('image'),
   jsonParser,
   async (req: any, res: Response) => {
-    res.send({ file: req.file })
+    try {
+      console.log('File upload request received', req.file)
+      res.send({ file: req.file })
+    } catch (error) {
+      res.status(500).send('server error')
+    }
   }
 )
 
 // @route       POST api/files/upload
 // @desc        Uploads a file object to db
 router.post('/', auth, jsonParser, async (req: Request, res: Response) => {
-  const { name, originalName, size, type, url, userId } = req.query
-
   try {
+    const { name, originalName, size, type, url, userId } = req.body
     const newFile = new File({
       name,
       originalName,
