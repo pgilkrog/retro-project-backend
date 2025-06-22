@@ -67,6 +67,18 @@ export function setupSocketIO(
       }
     })
 
+    socket.on('placeBomb', (data: { x: number; y: number }) => {
+      socket.broadcast.emit('bombPlaced', data)
+      socket.emit('bombPlaced', data)
+    })
+
+    socket.on('playerDied', (data: { id: string }) => {
+      if (players[data.id] != undefined) {
+        socket.broadcast.emit('playerDied', data)
+        socket.emit('playerDied', data)
+      }
+    })
+
     socket.on('disconnect', () => {
       delete players[socket.id]
       socket.broadcast.emit('playerDisconnected', socket.id)
