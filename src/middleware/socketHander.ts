@@ -48,12 +48,13 @@ export function setupSocketIO(
     // Game
     console.log('A user connected:', socket.id)
 
-    players[socket.id] = { id: socket.id, x: 200, y: 200 }
+    socket.on('joinGame', (data: { email: string }) => {
+      players[socket.id] = { id: socket.id, x: 200, y: 200 }
+      socket.broadcast.emit('newPlayer', players[socket.id])
+      console.log('new player:', players[socket.id])
+    })
 
-    socket.broadcast.emit('newPlayer', players[socket.id])
     socket.emit('currentPlayers', players)
-
-    console.log('new player:', players[socket.id])
 
     socket.on('move', (data: { x: number; y: number }) => {
       if (players[socket.id]) {
