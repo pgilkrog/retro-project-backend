@@ -21,6 +21,7 @@ interface Player {
 
 const onlineUsers: UserInfo[] = []
 const players: Record<string, Player> = {}
+let mapCords: { x: number; y: number }[] = []
 
 export function setupSocketIO(
   httpServer: http.Server,
@@ -46,12 +47,12 @@ export function setupSocketIO(
     socket.on('chatDisconnect', handleDisconnect(socket))
 
     // Game
-    console.log('A user connected:', socket.id)
-
-    socket.on('joinGame', (data: { email: string }) => {
+    socket.on('joinGame', () => {
       players[socket.id] = { id: socket.id, x: 200, y: 200 }
       socket.broadcast.emit('newPlayer', players[socket.id])
-      console.log('new player:', players[socket.id])
+      socket.emit('yourPlayerNumber', Object.keys(players).length)
+      socket.emit('mapCords', mapCords)
+      socket.emit('startGame')
     })
 
     socket.emit('currentPlayers', players)
@@ -66,6 +67,12 @@ export function setupSocketIO(
           y: data.y,
         })
       }
+    })
+
+    socket.on('mapCreated', (data: any) => {
+      console.log('Map created:', data)
+      mapCords = data
+      // socket.broadcast.emit('getMap', data)
     })
 
     socket.on('placeBomb', (data: { x: number; y: number }) => {
