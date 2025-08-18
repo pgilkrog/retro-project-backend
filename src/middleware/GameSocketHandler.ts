@@ -58,7 +58,7 @@ export function registerGameSocketHandlers(socket: Socket, io: Server) {
     mapCords = data
   })
 
-  socket.on(playerEvents.PLACE_BOMB, (data: { x: number; y: number }) => {
+  socket.on(playerEvents.PLACE_BOMB, (data: { x: number; y: number; width: number }) => {
     socket.broadcast.emit(playerEvents.BOMB_PLACED, data)
     socket.emit(playerEvents.BOMB_PLACED, data)
   })
