@@ -16,10 +16,10 @@ interface UserInfo {
 
 const onlineUsers: UserInfo[] = []
 
-export function setupSocketIO(
+export const setupSocketIO = (
   httpServer: http.Server,
   app: express.Application
-) {
+) => {
   const io = new Server(httpServer, {
     cors: {
       origin: [
