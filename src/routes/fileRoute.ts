@@ -7,7 +7,6 @@ import { File } from '../models'
 
 const router = express.Router()
 const jsonParser = bodyParser.json()
-// const upload = multer({ dest: 'uploads'})
 
 const storage = multer.diskStorage({
   destination: function (
@@ -17,6 +16,7 @@ const storage = multer.diskStorage({
   ) {
     cb(null, 'uploads/')
   },
+  
   filename: function (
     req: Request,
     file: any,

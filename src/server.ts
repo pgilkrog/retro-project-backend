@@ -25,7 +25,7 @@ router.use(cors(corsOptions))
 router.options('*', cors(corsOptions))
 
 router.get('/ping', (req, res, next) =>
-  res.status(200).json({ message: 'its alive' })
+  res.status(200).json({ message: 'retro backend is up and running' })
 )
 
 // set up routes
